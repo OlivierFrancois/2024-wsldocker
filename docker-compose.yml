@@ -1,0 +1,32 @@
+version: '3'
+services:
+  web:
+    container_name: '${DOCKER_ENVIRONMENT_NAME}-webserver'
+    build:
+      context: .
+      args:
+        DOCKER_WHOAMI: '${DOCKER_WHOAMI}'
+        DOCKER_NODE_MAJOR: '${DOCKER_NODE_MAJOR}'
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../../www:/var/www/
+      - ./php.ini:/usr/local/etc/php/php.ini
+      - ./template.conf:/etc/apache2/sites-available/template.conf
+      - ./template-ssl.conf:/etc/apache2/sites-available/template-ssl.conf
+  db:
+    container_name: '${DOCKER_ENVIRONMENT_NAME}-database'
+    image: mysql:5.7
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_DATABASE=${DOCKER_ENVIRONMENT_NAME}
+  phpmyadmin:
+    container_name: '${DOCKER_ENVIRONMENT_NAME}-phpmyadmin'
+    image: phpmyadmin:latest
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_ARBITRARY=1  # Autorisez la connexion à n'importe quelle base de données MySQL
+    depends_on:
+      - db
