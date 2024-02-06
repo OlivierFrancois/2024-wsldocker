@@ -11,7 +11,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ../../www:/var/www/
+      - ./../www:/var/www/
       - ./php.ini:/usr/local/etc/php/php.ini
       - ./template.conf:/etc/apache2/sites-available/template.conf
       - ./template-ssl.conf:/etc/apache2/sites-available/template-ssl.conf
